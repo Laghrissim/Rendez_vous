@@ -24,7 +24,7 @@
         data() {
 
             return {
-                clients: [],
+                secrets: [],
                 formData: {
                     email: '',
                     password:'',
@@ -35,10 +35,14 @@
         methods: {
             handleLogin(){
                 axios.get('/sanctum/csrf-cookie').then(response => {
-                    axios.post('/login',this.formData).then(response => {
-                        console.log(response);
-                    });
-                });
+  axios.post('/login', this.formData).then(response=> {
+    
+    console.log(response);
+}
+  
+  );
+});
+
             }
         }
     } 

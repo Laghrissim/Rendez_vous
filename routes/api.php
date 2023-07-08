@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\SecretController;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,9 @@ Route::post('/clients/{clientId}/appointments', [ClientController::class, 'store
 Route::post('/clients', [ClientController::class, 'store']);
 Route::post('/clients/register', [ClientController::class, 'register']);
 Route::post('/clients/login', [ClientController::class, 'login']);
+
+
+Route::get('/secrets', [SecretController::class, 'index']);
 
 
 
