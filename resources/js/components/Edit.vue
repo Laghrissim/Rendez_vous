@@ -142,9 +142,7 @@
               return { day: formattedDate, hour: formattedHour , month: formattedMonth };
             });
 
-        console.log(formattedDate);
-        console.log(formattedHour);
-        console.log(transformedData.value);
+       
 
             // console.log(allHoures.value);
             

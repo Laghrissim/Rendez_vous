@@ -1,5 +1,5 @@
 <template dark>
-<nav class="tw-sticky tw-top-0 tw-z-50">
+<nav class="tw-sticky tw-top-0 tw-z-50" v-if="!connected">
   <div  class="tw-bg-red-500 tw-p-4 tw-flex tw-items-center">
       <v-toolbar-title class="text-uppercase tw-text-white">
         <span class="font-weight-light ">Dentaire</span>

@@ -32,7 +32,7 @@
           <v-avatar size="100" class="tw-ml-20">
             <img src="/img1.png" alt="" >
           </v-avatar>
-          <p class="white--text subheading mt-1 text-center tw-ml-4">{{ user.name }}</p>
+          <p class="white-text subheading mt-1 text-center tw-ml-2 tw-font-bold">{{ user.name }}</p>
         </v-col>
       </v-row>
       <v-row class="mt-4 mb-4">
