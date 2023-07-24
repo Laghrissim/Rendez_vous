@@ -39,10 +39,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    protected $fillable = [
+        'name', // Add 'name' to the fillable attributes
+        'email',
+        'password',
+    ];
 
-    public function secrets(): HasMany
+    public function appointments()
     {
-        return $this->hasMany(Secret::class);
-        
+        return $this->hasMany(Appointment::class);
     }
+    
 }

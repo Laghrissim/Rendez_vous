@@ -51,7 +51,7 @@ class ClientController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Authentication successful',
-                
+                'data' => $client
             ]);
         }
 
