@@ -85,7 +85,7 @@ import Dashboard from './views/Dashboard.vue';
 // app.component('dashboard', Dashboard);
 
 import Projects from './views/Projects.vue';
-// app.component('projects', Projects);
+app.component('projects', Projects);
 
 import Team from './views/Team.vue';
 // app.component('ream', Team);

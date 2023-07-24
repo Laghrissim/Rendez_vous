@@ -38,13 +38,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::get('/appointments', [AppointmentController::class, 'index']);
     Route::post('/appointments', [AppointmentController::class, 'store']);
     // Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
-    // Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
+    Route::put('/appointments/edit/{id}', [AppointmentController::class, 'edit']);
+
     // Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
 });
    Route::get('/appointments', [AppointmentController::class, 'index']);
     
     Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
-    Route::post('/appointments/edit/{id}', [AppointmentController::class, 'edit']);
     Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
 
 

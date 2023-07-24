@@ -22,13 +22,29 @@
           <span>Tri par Date</span>
         </v-tooltip>
       </v-layout>
-      <v-card flat v-for="appointment in appointments" :key="appointment.title" class="mb-1">
+      <v-card flat v-for="appointment in appointments" :key="appointment.id" class="mb-1">
       <v-layout row wrap :class="`pa-3 appointment ${appointment.status}`">
         <v-expansion-panels>
       <v-expansion-panel class="tw-pa-10" :text="appointment.description">
         <template #title>
-          <span class="text-uppercase tw-mr-14">{{ appointment.title }}</span>
-          <span class=" font-weight-light  tw-ml-14"> {{ appointment.date }}</span>
+          <div class="tw-flex tw-items-center tw-justify-start tw-w-full">
+            <span class="text-uppercase ">{{ appointment.title }}</span>
+            <span class="font-weight-light tw-ml-10">{{ appointment.date }}</span>
+          </div>
+          <Edit :appointment="appointment"/>
+            <v-btn size="30" class="tw-float-right tw-mr-5"  text @click="deleteAppointment(appointment.id)">
+              <v-icon size="20">delete</v-icon>
+              <v-dialog v-model="showDeleteConfirmation" max-width="500px">
+                <v-card>
+                  <v-card-title class="headline">Are you sure you want to delete this appointment?</v-card-title>
+                  <v-card-actions class="flex justify-center">
+                    <v-btn  color="primary" @click="deleteAppointmentConfirmed">Yes</v-btn>
+                    <v-btn  color="primary" text @click="showDeleteConfirmation = false">No</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-btn>
+            
         </template>
         <!-- Content for the expansion panel goes here -->
       </v-expansion-panel>
@@ -41,18 +57,43 @@
 
 <script>
 import { mergeProps } from 'vue'
+import Edit from '../components/Edit.vue'
 import axios from 'axios';
 
 export default {
   name: 'appointments',
-  components: {},
+  components: {Edit, },
   data: () => ({
-    appointments: []
+    appointments: [],
+    showDeleteConfirmation: false,
   }),
   methods: {
     sortBy(prop) {
       this.appointments.sort((a, b) => (a[prop] < b[prop] ? -1 : 1))
     },
+    deleteAppointment(appointmentId) {
+    // Set the appointment ID to be deleted
+    this.appointmentToDeleteId = appointmentId;
+    // Show the delete confirmation dialog
+    this.showDeleteConfirmation = true;
+  },
+
+  deleteAppointmentConfirmed() {
+    axios
+      .delete(`api/appointments/${this.appointmentToDeleteId}`)
+      .then(() => {
+        // Remove the deleted appointment from the local list
+        this.appointments = this.appointments.filter(appointment => appointment.id !== this.appointmentToDeleteId);
+        // Hide the delete confirmation dialog
+        this.showDeleteConfirmation = false;
+      })
+      .catch(error => {
+        console.error(error);
+        // Hide the delete confirmation dialog
+        this.showDeleteConfirmation = false;
+      });
+  },
+
     mergeProps
   },
   created() {

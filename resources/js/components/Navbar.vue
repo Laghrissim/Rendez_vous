@@ -82,11 +82,7 @@ export default {
   },
   methods: {
       mergeProps,
-    //   logout() {
-    //   axios.post('/logout').then((response) => {
-        
-    //   });
-    // },
+    
     },
     setup() {
     const router = useRouter();

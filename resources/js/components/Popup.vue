@@ -49,6 +49,14 @@
       </v-card>
     </v-dialog>
   </v-row>
+  <v-dialog v-model="successDialog" max-width="400px" >
+       <v-card >
+         <v-card-title style="text-align: center;">Appointment created successfully</v-card-title>
+         <v-card-actions class="flex justify-center">
+           <v-btn color="green" text @click="successDialog = false">OK</v-btn>
+         </v-card-actions>
+       </v-card>
+     </v-dialog>
 </template>
 
 <script>
@@ -71,6 +79,7 @@ export default {
       formattedDate:'',
       allDates:[],
       allHoures:[],
+      successDialog:false,
 
      
       menu1: false,
@@ -184,6 +193,7 @@ export default {
           this.formattedDate = '';
           this.dialog = false;
           this.getDates();
+          this.successDialog=true;
           // location.reload();
           // Use the router to navigate to the desired page
           
