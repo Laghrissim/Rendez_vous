@@ -1,21 +1,27 @@
-<template>
-  <v-container class="tw-mt-4">
-    <v-row justify="center">
-      <v-col cols="12" md="8" lg="6">
-        <v-card class="tw-rounded" elevation="2">
-          <v-card-title class="tw-text-2xl tw-font-bold">
+<template >
+  <div class="app" :style="{ backgroundImage: 'url(/bg.jpg)' }">
+  <v-container rounded class="tw-h-screen " >
+    <v-row  justify="center"  class="tw-h-full tw-items-center tw-justify-center " >
+      <v-col cols="12" md="10" lg="8" class="tw-bg-red-500">
+        <v-card >
+          <v-card-title class="tw-text-2xl tw-font-bold tw-bg-red-500 tw-text-white">
             Register
           </v-card-title>
+          <v-divider class="border-opacity-100" :thickness="2"></v-divider>
           <v-card-text>
             <v-form @submit.prevent="handleRegistration">
-              <v-text-field v-model="formData.name" label="Name" outlined required></v-text-field>
-              <v-text-field v-model="formData.email" label="Email Address" outlined required type="email"></v-text-field>
-              <v-text-field v-model="formData.password" label="Password" outlined required type="password"></v-text-field>
-              <v-text-field v-model="formData.password_confirmation" label="Confirm Password" outlined required type="password"></v-text-field>
+              <v-text-field v-model="formData.name" label="Name" outlined required clearable prepend-icon="account_circle"></v-text-field>
+              <v-text-field v-model="formData.email" label="Email Address" outlined required type="email" clearable prepend-icon="mail_lock"></v-text-field>
+              <v-text-field v-model="formData.password" label="Password" outlined required type="password"  prepend-icon="key"></v-text-field>
+              <v-text-field v-model="formData.password_confirmation" label="Confirm Password" outlined required type="password" prepend-icon="check_circle_outline"></v-text-field>
               <div v-if="registerMessage" class="tw-bg-red-200 tw-text-red-800 tw-py-2 tw-px-4 tw-rounded tw-mt-4 tw-mb-4">
                 {{ registerMessage }}
               </div>
-              <v-btn color="primary" class="tw-mr-4" type="submit">
+              <v-divider class="border-opacity-100" :thickness="2"></v-divider><br>
+              <v-btn  class="tw-mr-4" type="submit" color="red" large>
+                <v-icon left><span class="material-icons mr-2">
+                  app_registration
+                  </span></v-icon>
                 Register
               </v-btn>
               <v-btn @click="showLoginForm">Login</v-btn>
@@ -25,6 +31,7 @@
       </v-col>
     </v-row>
   </v-container>
+</div>
 </template>
 
 
