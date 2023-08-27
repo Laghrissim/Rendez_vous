@@ -10,7 +10,7 @@
       class="flex"
       flat
       tile
-      color="red"
+      color="blue"
       :elevation="10"
     >
 

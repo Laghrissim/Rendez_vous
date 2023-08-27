@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="800px">
       <template  v-slot:activator=" { props: menu  } " >
-        <v-btn outlined  color="teal lighten-3" dark v-bind="mergeProps(menu)">Demander rendez-vous</v-btn>
+        <a class="btn-solid-lg " dark v-bind="mergeProps(menu)">Demandez Rendez-vous</a>
       </template>
       <v-card>
         <v-card-title>
@@ -13,6 +13,14 @@
            
                 <v-text-field label="Title" v-model="title" prepend-icon="folder" :rules="inputRules"></v-text-field>
                 <v-textarea label="Information" v-model="content" prepend-icon="edit" :rules="inputRules"></v-textarea>
+                <v-select
+                  v-model="selectedDoctorName"
+                  label="Selectioner Votre Docteur"
+                  :items="doctors.map(doctor => doctor.name)" 
+                  outlined
+                  prepend-icon="account_box"
+
+                ></v-select>
                 <v-col cols="12" lg="6">
                  <v-menu 
           ref="menu1"
@@ -33,6 +41,7 @@
               prepend-icon="event"
               @click="menu1 = true"
               v-bind="mergeProps(menu)"
+              readonly
             ></v-text-field>
           </template>
           <VDatePicker v-model="date" mode="dateTime" is24hr view="weekly" :disabled-dates="disabledDates" :rules="rules" />
@@ -62,7 +71,6 @@
 <script>
 import { mergeProps , computed ,watch ,ref} from 'vue'
 import moment from 'moment';
-import { useDate } from 'vuetify/labs/date'
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 export default {
@@ -80,7 +88,10 @@ export default {
       allDates:[],
       allHoures:[],
       successDialog:false,
-
+      doctors: [],
+      selectedDoctorName: null, // Variable to store the selected doctor's name
+      selectedDoctorId: null,
+      
      
       menu1: false,
       inputRules: [
@@ -93,9 +104,16 @@ export default {
       date(newDate){
         // const originalDate = new Date(newDate);
         this.formattedDate = newDate ? moment(newDate).format('YYYY-MM-DD HH:mm') : '';
-        this.menu1=false
-      }
-    },
+        
+      },
+        selectedDoctorName(newVal) {
+            // Find the corresponding doctor object based on the selectedDoctorName
+            const selectedDoctor = this.doctors.find(doctor => doctor.name === newVal);
+
+            // Update the selectedDoctorId with the ID of the selected doctor
+            this.selectedDoctorId = selectedDoctor ? selectedDoctor.id : null;
+          },
+      },
       
   setup() {
     const disabledDates = ref([
@@ -157,6 +175,7 @@ export default {
     const Redirect = () =>{
       
         router.push('/projects');
+        
     }
     return {
       rules,
@@ -175,6 +194,7 @@ export default {
       title: this.title,
       description: this.content,
       date: this.formattedDate,
+      doctor_id: this.selectedDoctorId,
     };
 
     // Send a POST request to the backend API
@@ -183,6 +203,7 @@ export default {
         .post('api/appointments', formData)
         .then(() => {
           // Handle the successful response
+          this.successDialog=true;
           console.log('Appointment created successfully');
           // Clear the form fields
           this.title = '';
@@ -191,13 +212,9 @@ export default {
           this.formattedDate = '';
           this.dialog = false;
           this.getDates();
-          this.successDialog=true;
+         
           // location.reload();
-          // Use the router to navigate to the desired page
-          
-          
-          // Reload the page to reflect the updated data
-          // location.reload();
+         
         })
         .catch((error) => {
           // Handle any errors
@@ -205,40 +222,27 @@ export default {
         });
     });
       },
-  // getDates() {
-  //     axios.get('api/getDates')
-  //       .then(response => {
-  //         this.allDates = response.data;
-  //         console.log(this.allDates);
-  //         this.getHoures( this.allDates)
-  //       })
-  //       .catch(error => {
-  //         console.error(error);
-  //       });
-  //   },
-  //   getHoures(obj) {
-  //     this.allHoures = Object.values(obj).map(date => moment(date).format('HH'));
-  //     console.log(this.allHoures);
-  //   }
+      getDoctors() {
+    axios.get('api/doctors')
+      .then(response => {
+        this.doctors = response.data;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  },
+  
+ 
       
+    },
+    created() {
+      this.getDoctors();
     },
 
     
-   
-  
-    
-  mounted() {
-    
-    
-    // this.getHoures(this.allDates)
-
-  },
-
 
    
-    components:{
-      
-    }
+    
 
 
 }

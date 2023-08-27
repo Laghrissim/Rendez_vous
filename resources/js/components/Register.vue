@@ -2,9 +2,9 @@
   <div class="app" :style="{ backgroundImage: 'url(/bg.jpg)' }">
   <v-container rounded class="tw-h-screen " >
     <v-row  justify="center"  class="tw-h-full tw-items-center tw-justify-center " >
-      <v-col cols="12" md="10" lg="8" class="tw-bg-red-500">
+      <v-col cols="12" md="10" lg="8" class="tw-bg-blue-500">
         <v-card >
-          <v-card-title class="tw-text-2xl tw-font-bold tw-bg-red-500 tw-text-white">
+          <v-card-title class="tw-text-2xl tw-font-bold tw-bg-blue-500 tw-text-white">
             Register
           </v-card-title>
           <v-divider class="border-opacity-100" :thickness="2"></v-divider>
@@ -12,13 +12,21 @@
             <v-form @submit.prevent="handleRegistration">
               <v-text-field v-model="formData.name" label="Name" outlined required clearable prepend-icon="account_circle"></v-text-field>
               <v-text-field v-model="formData.email" label="Email Address" outlined required type="email" clearable prepend-icon="mail_lock"></v-text-field>
+             
+              <v-select
+                v-model="formData.type"
+                label="Type"
+                :items="['client', 'doctor']"
+                outlined
+                prepend-icon="supervisor_account"
+              > </v-select>
               <v-text-field v-model="formData.password" label="Password" outlined required type="password"  prepend-icon="key"></v-text-field>
               <v-text-field v-model="formData.password_confirmation" label="Confirm Password" outlined required type="password" prepend-icon="check_circle_outline"></v-text-field>
               <div v-if="registerMessage" class="tw-bg-red-200 tw-text-red-800 tw-py-2 tw-px-4 tw-rounded tw-mt-4 tw-mb-4">
                 {{ registerMessage }}
               </div>
               <v-divider class="border-opacity-100" :thickness="2"></v-divider><br>
-              <v-btn  class="tw-mr-4" type="submit" color="red" large>
+              <v-btn  class="tw-mr-4" type="submit" color="blue" large>
                 <v-icon left><span class="material-icons mr-2">
                   app_registration
                   </span></v-icon>
@@ -48,6 +56,7 @@ export default {
       formData: {
         name: '',
         email: '',
+        type:'',
         password: '',
         password_confirmation: '',
       },
@@ -59,6 +68,7 @@ export default {
         axios.post('/register', this.formData)
           .then(response => {
             console.log(response);
+            console.log(this.formData.type);
             this.$emit('registration-success'); // Emit the custom event
             location.reload();
           })

@@ -1,7 +1,7 @@
 <template dark>
 <nav class="tw-sticky tw-top-0 tw-z-50" v-if="!connected">
-  <div  class="tw-bg-red-500 tw-p-4 tw-flex tw-items-center">
-      <v-toolbar-title class="text-uppercase tw-text-white">
+  <div  class="tw-bg-blue-500 tw-p-4 tw-float">
+      <v-toolbar-title class="text-uppercase tw-text-black">
         <span class="font-weight-light ">Dentaire</span>
         <span>Express</span>
       </v-toolbar-title>
@@ -12,9 +12,9 @@
   <div class="app" :style="{ backgroundImage: 'url(/bg.jpg)' }">
 <v-container  class="tw-min-h-screen tw-flex tw-items-center tw-justify-center " v-if="!connected && !showRegister">
     <v-row justify="center" align="center" class="fill-height" >
-      <v-col cols="12" sm="8" md="6" class="tw-bg-red-500">
+      <v-col cols="12" sm="8" md="6" class="tw-bg-blue-500">
         <v-card v-if="!connected && !showRegister">
-          <v-card-title class="text-xl font-bold tw-bg-red-500 tw-text-white" >Login</v-card-title>
+          <v-card-title class="text-xl font-bold tw-bg-blue-500 tw-text-white" >Login</v-card-title>
           
                 <v-divider class="border-opacity-100" :thickness="2"></v-divider>
           <v-card-text>
@@ -25,7 +25,7 @@
               <v-alert v-if="LoginMessage" type="error" class="mt-4 mb-4">{{ LoginMessage }}</v-alert>
               <v-row class="justify-center"><br>
                 <v-divider class="border-opacity-100" :thickness="2"></v-divider><br>
-              <v-btn  class="mr-4" type="submit" color="red" large>
+              <v-btn  class="mr-4" type="submit" color="blue" large>
                 <v-icon left>lock</v-icon>
                 Login
               </v-btn>
@@ -45,13 +45,15 @@
         
   <register v-if="showRegister" @show-login="showLoginForm" @registration-success="handleRegistrationSuccess"></register>
 
-  <client v-if="!showRegister && connected" :user="user" />
+  <Client v-if="!showRegister && connected && user.type=='client'" :user="user" />
+  <Doctor v-if="!showRegister && connected && user.type=='doctor'" :user="user" />
 
 </template>
 
 <script>
 import Client from './ClientApp.vue'
-import Register from './Register.vue';
+import Doctor from './DoctorApp.vue'
+import Register from './RegisterDoctor.vue';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
@@ -89,12 +91,6 @@ export default {
         });
       });
     },
-    getSecrets() {
-      axios.get('/api/secrets').then((response) => {
-        console.log(response);
-        this.secrets = response.data;
-      });
-    },
     checkAuthentication() {
       axios.get('/sanctum/csrf-cookie').then(response => {
         axios.get('api/check-authentication').then((response) => {
@@ -125,7 +121,8 @@ export default {
   },
   components: {
     register: Register,
-    client: Client,
+    Client,
+    Doctor,
   },
   created() {
     this.checkAuthentication();
@@ -138,6 +135,7 @@ export default {
     }, 2000);
    
   },
+
 };
 </script>
 

@@ -1,16 +1,3 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
-// import Dashboard from '../views/Dashboard.vue'
-// import Projects from '../views/Projects.vue'
-// import Team from '../views/Team.vue'
-//import './bootstrap';
-
-
-
-
 
 //tailwind
 import 'tailwindcss/tailwind.css';
@@ -90,10 +77,13 @@ app.component('projects', Projects);
 import Team from './views/Team.vue';
 // app.component('ream', Team);
 
-import Navbar from './components/Navbar.vue';
+import DoctorDashboard from './views/DoctorDashboard.vue';
 // app.component('navbar', Navbar);
 
-import Footer from './components/Footer.vue';
+import Clients from './views/Clients.vue';
+import Doctor from './components/LoginDocteur.vue';
+import First from './components/First.vue';
+import DoctorApointment from './views/DoctorApointment.vue';
 // app.component('footer', Footer);
 
 // import Popup from './components/Popup.vue';
@@ -103,35 +93,62 @@ import Footer from './components/Footer.vue';
 
 
 //rooter
-
 const routes = [
-  {
-    path: '/',
-    name: 'dashboard',
-    component: Dashboard
-  },
-  {
-    path: '/projects',
-    name: 'projects',
-    component: Projects
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    //component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
-    path: '/team',
-    name: 'team',
-    component: Team
-  }
-]
-
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes
-})
-
+    {
+      path: '/',
+      name: 'dashboard',
+      components: {
+        default: Dashboard,
+        client: Dashboard, 
+        doctor: DoctorDashboard, // Named view for the doctor dashboard
+        first: First, // Named view for the doctor dashboard
+      },
+    },
+  
+    {
+      path: '/projects',
+      name: 'projects',
+      components: {
+        default: Projects,
+        client: Projects,// Default view
+        doctor: DoctorApointment , // Named view for the doctor dashboard
+      },
+    },
+    {
+      path: '/team',
+      name: 'team',
+      components: {
+        default: Team, // Default view
+        client: Team, // Default view
+        doctor: Clients, // Named view for the doctor dashboard
+      },
+    },
+   
+    {
+      path: '/doctor',
+      name: 'doctor',
+      components: {
+        default: Doctor,
+        first: Doctor, // Default view
+         // Named view for the doctor dashboard
+      },
+    },
+    {
+      path: '/client',
+      name: 'client',
+      components: {
+        default: Dashboard,
+        first: Login, // Default view
+        // Named view for the doctor dashboard
+      },
+    },
+  ]
+  
+  
+  const router = createRouter({
+    history: createWebHistory(),
+    routes
+  })
 
 
 /**

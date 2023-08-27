@@ -40,19 +40,16 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        // 'client' => [
-        //     'driver' => 'sanctum',
-        //     'provider' => 'clients',
-        // ],
-        // 'docteur' => [
-        //     'driver' => 'sanctum',
-        //     'provider' => 'docteurs',
-        // ],
         'api' => [
             'driver' => 'sanctum',
             'provider' => 'users',
             'hash' => false,
         ],
+        // 'docteur' => [
+        //     'driver' => 'session',
+        //     'provider' => 'docteurs',
+        // ],
+        
     ],
 
     /*
@@ -81,10 +78,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Client::class,
         ],
-        'docteurs' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Docteur::class,
-        ],
+        // 'docteurs' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\Docteur::class,
+        // ],
 
         // 'users' => [
         //     'driver' => 'database',
@@ -115,6 +112,12 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'docteurs' => [
+            'provider' => 'docteurs',
+            'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
