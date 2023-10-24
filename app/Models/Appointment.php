@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Appointment extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'description', 'date', 'user_id','doctor_id'];
+    protected $fillable = ['title', 'description', 'date','status', 'user_id','doctor_id'];
     protected $casts = [
         'options' => 'array',
     ];

@@ -57,5 +57,18 @@ class CommentController extends Controller
        // Return a success response
        return response()->json(['message' => 'Appointment deleted successfully']);
     }
+
+            public function getProfilePictureByCommentId($commentId)
+        {
+            // Retrieve the comment by its ID
+            $comment = Comment::findOrFail($commentId);
+
+            // Get the associated user and their profile picture
+            $user = $comment->user;
+            $profilePicture = $user->profile_picture;
+
+            // You can return the profile picture URL or any other data as needed
+            return response()->json(['profile_picture' => $profilePicture]);
+        }
     
 }

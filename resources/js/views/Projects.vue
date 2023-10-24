@@ -1,7 +1,7 @@
 <template>
   <div class="appointments">
     <h2 class="ma-10">Vos rendez-vous</h2>
-    <v-container v-if="appointments.length != 0">
+    <v-container v-if="appointments.length != 0 ">
       <v-layout  v-if="areAllAppointmentsMissed" row wrap class="mb-4" >
         <v-tooltip bottom>
           <template v-slot:activator="{ props: menu }">
@@ -34,6 +34,8 @@
             <span class="text-uppercase ">{{ appointment.title }}</span>
             <span class="font-weight-light tw-ml-10">{{ appointment.date }}</span>
             <span class="tw-font-weight-light tw-ml-10 "> <strong> Avec Dr. </strong>{{ doctors[appointment.doctor_id] }}</span>
+            <span class="font-weight-light tw-ml-10" :class="{'text-green': appointment.status === 'confirmed', 'text-orange': appointment.status === 'unconfirmed'}">{{ appointment.status.toUpperCase() + (appointment.status === 'confirmed' ? ' BY DOCTOR' : '') }}</span>
+
           </div>
           <Edit :appointment="appointment" />
             <v-btn size="30" class="tw-float-right tw-mr-5"  text @click="deleteAppointment(appointment.id)">
@@ -57,7 +59,7 @@
     </div>
     </v-card>
     <br><br><br> 
-      <v-layout v-if="hasMissedAppointments" row wrap class="mb-4">
+      <v-layout v-if="hasMissedAppointments " row wrap class="mb-4">
         <v-tooltip bottom>
           <template v-slot:activator="{ props: menu }">
             <v-btn small outlined color="green" @click="sortBy('title')" class="mr-2" dark v-bind="mergeProps(menu)">
@@ -78,9 +80,9 @@
           <span>Tri par Date</span>
         </v-tooltip>
       </v-layout>
-      <h4 v-if="hasMissedAppointments" style="color: red;">Rendez-vous manqués</h4>       
+      <h4 v-if="hasMissedAppointments   " style="color: red;">Rendez-vous manqués</h4>       
       <v-card flat v-for="appointment in appointments" :key="appointment.id" class="mb-1">
-        <div v-if="isMissed(appointment)">
+        <div v-if="isMissed(appointment) ">
       <v-layout row wrap :class="`pa-3 appointment up`" >
         <v-expansion-panels>
       <v-expansion-panel class="tw-pa-10" :color="appointmentColor(appointment) " :text="appointment.description">
@@ -89,6 +91,8 @@
             <span class="text-uppercase ">{{ appointment.title }}</span>
             <span class="font-weight-light tw-ml-10">{{ appointment.date }}</span>
             <span class="tw-font-weight-light tw-ml-10 "> <strong> Avec Dr. </strong>{{ doctors[appointment.doctor_id] }}</span>
+            <span class="font-weight-light tw-ml-10" :class="{'text-green': appointment.status === 'confirmed', 'text-orange': appointment.status === 'unconfirmed'}">{{ appointment.status.toUpperCase() + (appointment.status === 'confirmed' ? ' BY DOCTOR' : '') }}</span>
+
           </div>
           <EditTime @appointmentUpdated="handleAppointmentUpdated" :appointment="appointment" />
 
@@ -188,17 +192,18 @@ export default {
       // When the appointment is updated, refetch the appointments
       this.fetchAppointment();
     },
-    areAllAppointmentsMissed() {
-    // Iterate through the appointments array
-    for (const appointment of this.appointments) {
-      // If any appointment is not missed, return false
-      if (!this.isMissed(appointment)) {
-        return false;
-      }
-    }
-    // If all appointments are missed, return true
-    return true;
-  }
+  //   areAllAppointmentsConfirmed() {
+  //   // Iterate through the appointments array
+  //   for (const appointment of this.appointments) {
+  //     // If any appointment is not confirmed, return false
+  //     if (appointment.status !== 'confirmed') {
+  //       return false;
+  //     }
+  //   }
+  //   // If all appointments are confirmed, return true
+  //   return true;
+  // },
+
   },
   created() {
     // Récupérer les rendez-vous via la route /appointments
@@ -237,6 +242,8 @@ export default {
     },
     areAllAppointmentsMissed() {
     return this.appointments.some(appointment => !this.isMissed(appointment));},
+    areAllAppointmentsConfirmed() {
+    return this.appointments.some(appointment => appointment.status !== 'confirmed');},
 },
 
 
@@ -279,4 +286,11 @@ h2 {
 h6{
   color:gray;
 }
+.text-green {
+    color: green; /* Set your desired green color */
+  }
+
+.text-orange {
+    color: orange; /* Set your desired blue color */
+  }
 </style>

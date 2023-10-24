@@ -1,153 +1,145 @@
-<template>
-    <v-app>
-      <v-main >
-        <router-view name="first"></router-view>
-        
-      </v-main>
+<template dark>
+  <nav class="tw-sticky tw-top-0 tw-z-50" v-if="!connected">
+    <div  class="tw-bg-blue-500 tw-p-4 tw-float">
+        <v-toolbar-title class="text-uppercase tw-text-black">
+          <span class="font-weight-light ">Dentaire</span>
+          <span>Express</span>
+        </v-toolbar-title>
+        <v-spacer></v-spacer> 
+      </div>
+    </nav>
+  
+    <div class="app" :style="{ backgroundImage: 'url(/bg.jpg)' }">
+  <v-container  class="tw-min-h-screen tw-flex tw-items-center tw-justify-center " v-if="!connected && !showRegister">
+      <v-row justify="center" align="center" class="fill-height" >
+        <v-col cols="12" sm="8" md="6" class="tw-bg-blue-500">
+          <v-card v-if="!connected && !showRegister">
+            <v-card-title class="text-xl font-bold tw-bg-blue-500 tw-text-white" >Admin Login</v-card-title>
+            
+                  <v-divider class="border-opacity-100" :thickness="2"></v-divider>
+            <v-card-text>
+              <p>Sign in with your email and password: </p><br>
+              <v-form @submit.prevent="handleDoctorLogin">
+                <v-text-field v-model="formData.email" outline label="Email Address" clearable prepend-icon="account_circle"></v-text-field>
+                <v-text-field v-model="formData.password" outline label="Password" type="password" prepend-icon="key"></v-text-field>
+                <v-alert v-if="LoginMessage" type="error" class="mt-4 mb-4">{{ LoginMessage }}</v-alert>
+                <v-row class="justify-center"><br>
+                  <v-divider class="border-opacity-100" :thickness="2"></v-divider><br>
+                <v-btn  class="mr-4" type="submit" color="blue" large>
+                  <v-icon left>lock</v-icon>
+                  Login
+                </v-btn>
+                  
+                </v-row>
+              </v-form>
+            </v-card-text>
+          </v-card>
+          
+        </v-col>
+      </v-row>
       
-       
-    </v-app>
-   
+    </v-container>
+  </div>
+  
+          
+    <register v-if="showRegister" @show-login="showLoginForm" @registration-success="handleRegistrationSuccess"></register>
+  
+    <Admin v-if="!showRegister && connected " :user="user" />
+  
   </template>
   
   <script>
-  
-  import Navbar from './Navbar.vue'
-  import Footer from './Footer.vue'
+  import Admin from './AdminApp.vue'
+  import Register from './RegisterAdmin.vue';
   import axios from 'axios';
-
+  axios.defaults.withCredentials = true;
+  
   export default {
-    name: 'App',
-  
-    components: {
-     Navbar,
-     Footer
-    },
-    props: {
-    user: {
-      type: Object,
-      required: true,
-    },
-  },
-  
-    data: () => ({
-        name: '',
-        email: '',
-        comment: '',
-        comments: [],
-        showDeleteConfirmation: false,
-    }),
-    methods: {
-    submitComment() {
-      const commentData = {
-        name: this.user.name,
-        email: this.user.email,
-        comment: this.comment,
+    data() {
+      return {
+        drawer: true,
+        darkTheme: true,
+        connected:false,
+        secrets: [],
+        user: {},
+        LoginMessage:'',
+        registration:false,
+        formData: {
+          email: '',
+          password: '',
+        },
+        showRegister: false,
       };
-
-      // Make a POST request to your backend API to save the comment
-      axios.post('/api/comments', commentData)
-        .then(response => {
-          // Handle the response or show a success message
-          console.log(response.data);
-          this.fetchComments
-          // Reset the form fields after successful submission
-          this.name = '';
-          this.email = '';
-          this.comment = '';
-          this.fetchComments();
-
-        })
-        .catch(error => {
-          // Handle errors or show an error message
-          console.error(error);
-          alert('Error submitting comment.');
-        });
-    }, fetchComments() {
-      axios.get('/api/comments')
-        .then(response => {
-          this.comments = response.data;
-        })
-        .catch(error => {
-          console.error(error);
-        });
     },
-    
-    deleteComment(commentId) {
-    // Set the appointment ID to be deleted
-    this.commentToDeleteId = commentId;
-    // Show the delete confirmation dialog
-    this.showDeleteConfirmation = true;
-  },
-
-  deleteCommentConfirmed() {
+    methods: {
+      handleDoctorLogin() {
     axios.get('/sanctum/csrf-cookie').then(response => {
-    axios
-      .delete(`api/comments/${this.commentToDeleteId}`)
-      .then(() => {
-        // Remove the deleted appointment from the local list
-        this.comments = this.comments.filter(comment => comment.id !== this.commentToDeleteId);
-        // Hide the delete confirmation dialog
-        this.showDeleteConfirmation = false;
+      axios.post('/admin', this.formData).then((response) => {
+        this.connected = true;
+        axios.get('/api/admin').then((response) => {
+          console.log(response);
+          this.user = response.data;
+         
+          this.LoginMessage = 'Login successful!';
+        });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
-        // Hide the delete confirmation dialog
-        this.showDeleteConfirmation = false;
-      });})
+        this.LoginMessage = 'Login failed. Please check your credentials.'
+      });
+    });
   },
+  
+  checkDoctorAuthentication() {
+    axios.get('/sanctum/csrf-cookie').then(response => {
+      axios.get('api/admin/check-authentication').then((response) => {
+        if (response.data.authenticated) {
+          this.connected = true;
+  
+          axios.get('/api/admin').then((response) => {
+            console.log(response);
+            this.user = response.data;
+          });
+        }
+      });
+    });
   },
-  created() {
-      this.fetchComments();
-
+  
+      
+      showRegisterForm() {
+        this.showRegister = true;
+      },
+      showLoginForm() {
+        this.showRegister = false;
+      },
+      handleRegistrationSuccess() {
+        localStorage.setItem('registrationSuccessMessage','Registration successful!');
+        
+       
+        
+      },
     },
-
+    components: {
+      register: Register,
+      Admin,
+    },
+    created() {
+      this.checkDoctorAuthentication();
+      const storedRegistrationMessage = localStorage.getItem('registrationSuccessMessage');
+      setTimeout(() => {
+        if (storedRegistrationMessage) {
+        this.LoginMessage = storedRegistrationMessage;
+        localStorage.removeItem('registrationSuccessMessage');
+      }
+      }, 2000);
+     
+    },
   };
   </script>
+  
   <style>
-  h1 {
-	color: #223150;
-	font-weight: 700;
-	font-size: 2.5rem;
-	line-height: 3.25rem;
-	letter-spacing: -0.4px;
-}
-
-h2 {
-	color: #223150;
-	font-weight: 700;
-	font-size: 2rem;
-	line-height: 2.5rem;
-	letter-spacing: -0.4px;
-}
-
-h3 {
-	color: #223150;
-	font-weight: 700;
-	font-size: 1.75rem;
-	line-height: 2.25rem;
-	letter-spacing: -0.2px;
-}
-
-h4 {
-	color: #223150;
-	font-weight: 700;
-	font-size: 1.5rem;
-	line-height: 2rem;
-	letter-spacing: -0.2px;
-}
-
-h5 {
-	color: #223150;
-	font-weight: 700;
-	font-size: 1.25rem;
-	line-height: 1.625rem;
-}
-
-h6 {
-	color: #223150;
-	font-weight: 700;
-	font-size: 1rem;
-	line-height: 1.375rem;
-}
-</style>
+  .form-row {
+    margin-bottom: 8px;
+  }
+  </style>
+  

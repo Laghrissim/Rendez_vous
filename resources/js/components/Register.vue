@@ -13,13 +13,7 @@
               <v-text-field v-model="formData.name" label="Name" outlined required clearable prepend-icon="account_circle"></v-text-field>
               <v-text-field v-model="formData.email" label="Email Address" outlined required type="email" clearable prepend-icon="mail_lock"></v-text-field>
              
-              <v-select
-                v-model="formData.type"
-                label="Type"
-                :items="['client', 'doctor']"
-                outlined
-                prepend-icon="supervisor_account"
-              > </v-select>
+             
               <v-text-field v-model="formData.password" label="Password" outlined required type="password"  prepend-icon="key"></v-text-field>
               <v-text-field v-model="formData.password_confirmation" label="Confirm Password" outlined required type="password" prepend-icon="check_circle_outline"></v-text-field>
               <div v-if="registerMessage" class="tw-bg-red-200 tw-text-red-800 tw-py-2 tw-px-4 tw-rounded tw-mt-4 tw-mb-4">
@@ -56,7 +50,7 @@ export default {
       formData: {
         name: '',
         email: '',
-        type:'',
+        type:'client',
         password: '',
         password_confirmation: '',
       },

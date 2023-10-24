@@ -6,7 +6,7 @@
                 <div class="text-container ">
                     <h1 class="h1-large">L'espace docteur</h1>
                     <p class="p-large">Cabinet dentaire DentaireExpress</p>
-                    <Popup />
+                    <router-link to="/projects" class="btn-solid-lg"  dark>Voir votre rendez-vous</router-link>
                 </div>
             </div> 
             <div class="col-lg-6 col-xl-5">

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->dateTime('date');
+            $table->string('status')->default('unconfirmed');
+
             $table->timestamps();
 
             // Add foreign key constraints

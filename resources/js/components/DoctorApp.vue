@@ -28,7 +28,7 @@
                         </v-card>
                     </v-dialog>
                     </v-btn>
-                    <img class="quotes" src="assets/images/quotes.svg" alt="alternative" />
+                    <img class="quotes" :src="profilePictures[comment.id]" alt="alternative" />
                     <div class="card-body">
                         <p class="testimonial-text">{{ comment.comment }}</p>
                         <div class="testimonial-author">{{ comment.name }}</div>
@@ -140,11 +140,12 @@
     },
   },
   
-    data: () => ({
+  data: () => ({
         name: '',
         email: '',
         comment: '',
         comments: [],
+        profilePictures: {},
         showDeleteConfirmation: false,
     }),
     methods: {
@@ -161,7 +162,6 @@
           // Handle the response or show a success message
           console.log(response.data);
           this.fetchComments
-          alert('Comment submitted successfully!');
           // Reset the form fields after successful submission
           this.name = '';
           this.email = '';
@@ -174,8 +174,9 @@
           console.error(error);
           alert('Error submitting comment.');
         });
-    }, fetchComments() {
-      axios.get('/api/comments')
+    }, 
+    async fetchComments() {
+      await axios.get('/api/comments')
         .then(response => {
           this.comments = response.data;
         })
@@ -207,11 +208,29 @@
         this.showDeleteConfirmation = false;
       });})
   },
-  },
-  created() {
-      this.fetchComments();
-      
 
+  async fetchProfilePicture(userId) {
+    try {
+      const response = await axios.get(`api/comments/${userId}/profile-picture`); // Replace with your actual route
+      // Assuming your API returns the profile picture URL in response.data.profile_picture
+      return response.data.profile_picture;
+    } catch (error) {
+      console.error(`Error fetching profile picture for user ${userId}:`, error);
+      return ''; // Return an empty string or a default image URL in case of an error
+    }
+  },
+  },
+  async created() {
+    
+    await this.fetchComments();
+   
+      for (const comment of this.comments) {
+    const profilePicture = await this.fetchProfilePicture(comment.user_id);
+    this.profilePictures[comment.id] = profilePicture;
+    
+  }
+      
+     
     },
 
   };

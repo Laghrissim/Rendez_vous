@@ -45,10 +45,15 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
-        // 'docteur' => [
-        //     'driver' => 'session',
-        //     'provider' => 'docteurs',
-        // ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+        'docteur' => [
+            'driver' => 'session',
+            'provider' => 'docteurs',
+        ],
+
         
     ],
 
@@ -78,10 +83,14 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Client::class,
         ],
-        // 'docteurs' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\Docteur::class,
-        // ],
+        'docteurs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Docteur::class,
+        ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
 
         // 'users' => [
         //     'driver' => 'database',
@@ -117,6 +126,12 @@ return [
         ],
         'docteurs' => [
             'provider' => 'docteurs',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

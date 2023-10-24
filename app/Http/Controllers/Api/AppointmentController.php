@@ -113,4 +113,24 @@ public function edit(AppointmentRequest $request, string $id)
 
         return $clients;
     }
+
+    public function confirm($id)
+    {
+        $item = Appointment::findOrFail($id);
+
+        // Update the status to 'confirmed'
+        $item->update(['status' => 'confirmed']);
+
+        return response()->json(['message' => 'Appointment confirmed successfully']);
+    }
+    
+    public function unconfirm($id)
+    {
+        $item = Appointment::findOrFail($id);
+
+        // Update the status to 'unconfirmed'
+        $item->update(['status' => 'unconfirmed']);
+
+        return response()->json(['message' => 'Appointment unconfirmed successfully']);
+    }
 }

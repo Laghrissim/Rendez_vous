@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\DocteurController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,10 @@ use Laravel\Dusk\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('app');
 });
+
+Route::get('/admin', function () {
+    return view('admin');
+});
 // Route::get('/client', function () {
 //     return view('client');
 // });
@@ -34,11 +39,11 @@ Route::get('/', function () {
 // });
 
 
-Route::post('/docteur',[DocteurController::class,'docteurLogin']);
+Route::post('/admin',[AdminController::class,'adminLogin']);
 
-Route::post('/docteur/register',[DocteurController::class,'createDoctor']);
+Route::post('/admin/register',[AdminController::class,'createAdmin']);
 
-Route::post('/docteur/logout',[DocteurController::class,'docteurLogout']);
+Route::post('/admin/logout',[AdminController::class,'adminLogout']);
 
 // Route::post('/login',[UserController::class,'Login']);
 

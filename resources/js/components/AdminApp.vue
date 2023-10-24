@@ -2,7 +2,7 @@
     <v-app>
     <Navbar :user="user"/>
       <v-main >
-        <router-view></router-view>
+        <router-view name="admin"></router-view>
         <hr class="section-divider" />
 
   <div class="cards-2 bg-gray">
@@ -16,7 +16,7 @@
             <div class="col-lg-12 ">
                 
                 <div class="card tw-ml-5" v-for="comment in comments" :key="comment.id">
-                    <v-btn   v-if="user && user.id === comment.user_id" size="30" class="tw-float-right " @click="deleteComment(comment.id)" text >
+                    <v-btn   size="30" class="tw-float-right " @click="deleteComment(comment.id)" text >
                     <v-icon size="20">close</v-icon>
                     <v-dialog v-model="showDeleteConfirmation" max-width="500px">
                         <v-card>
@@ -30,9 +30,9 @@
                     </v-btn>
                     <img class="quotes" :src="profilePictures[comment.id]" alt="alternative" />
                     <div class="card-body">
-                        <p class="testimonial-text">{{ comment.comment }}</p> 
+                        <p class="testimonial-text">{{ comment.comment }}</p>
                         <div class="testimonial-author">{{ comment.name }}</div>
-                        <div class="occupation">{{ comment.user_id === user.id ? 'You' : 'Client' }}</div>
+                        <div class="occupation">Client</div>
                         
                     </div>
                    
@@ -46,41 +46,12 @@
   </div> 
         <hr class="section-divider" />
 
-      <div id="contact" class="form-1">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="text-container">
-                    <div class="section-title">Laissez-Nous votre commentaire</div>
-                    <h2>Envoyez le formulaire pour nous contacter</h2>
-                    <p>Nous sommes impatients de vous rencontrer et de vous aider à obtenir un sourire sain et éclatant. Prenez rendez-vous dès aujourd'hui et découvrez pourquoi nous sommes le choix privilégié pour votre santé bucco-dentaire. Contactez-nous dès maintenant, car chaque sourire mérite des soins d'exception !</p>
-                    
-                </div> 
-            </div> 
-            <div class="col-lg-6 tw-mt-20">
-               
-                <form @submit.prevent="submitComment">
-                  
-                    <div class="form-group">
-                      <textarea placeholder="Comment" v-model="comment" class="form-control-input"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="form-control-submit-button">Envoyer</button>
-                    </div>
-                </form>
-              
-            </div> 
-        </div>
-    </div> 
-  </div>
-  <hr class="section-divider" />
-
   <div class="footer bg-gray">
     <img class="decoration-circles" src="assets/images/decoration-circles.png" alt="alternative" />
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h4>Nous sommes ravis d'être en mesure de vous offrir une nouvelle façon de rester connectés avec nous - via les réseaux sociaux !</h4>
+                <h4>Nos réseaux sociaux !</h4>
                 <div class="social-container">
                     <span class="fa-stack">
                         <a href="#your-link">
@@ -148,8 +119,10 @@
   
   <script>
   
-  import Navbar from './Navbar.vue'
+  import Navbar from './AdminNavbar.vue'
   import Footer from './Footer.vue'
+  import Dashboard from '../views/DoctorDashboard.vue'
+
   import axios from 'axios';
 
   export default {
@@ -157,7 +130,8 @@
   
     components: {
      Navbar,
-     Footer
+     Footer,
+     Dashboard
     },
     props: {
     user: {
@@ -166,7 +140,7 @@
     },
   },
   
-    data: () => ({
+  data: () => ({
         name: '',
         email: '',
         comment: '',
@@ -258,9 +232,6 @@
       
      
     },
-
-
- 
 
   };
   </script>

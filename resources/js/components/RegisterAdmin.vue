@@ -5,7 +5,7 @@
       <v-col cols="12" md="10" lg="8" class="tw-bg-blue-500">
         <v-card >
           <v-card-title class="tw-text-2xl tw-font-bold tw-bg-blue-500 tw-text-white">
-            Doctor Registration
+            Admin Registration
           </v-card-title>
           <v-divider class="border-opacity-100" :thickness="2"></v-divider>
           <v-card-text>
@@ -59,7 +59,7 @@ export default {
     handleRegistration() {
       axios.get('/sanctum/csrf-cookie')
         .then(() => {
-          axios.post('/docteur/register', this.formData)
+          axios.post('/admin/register', this.formData)
             .then(response => {
               console.log(response);
               console.log(this.formData.type);

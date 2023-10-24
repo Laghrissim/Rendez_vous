@@ -53,20 +53,28 @@ const vuetify = createVuetify({
  * to use in your application's views. An example is included for you.
  */
 
+import LoginAdmin from './components/LoginAdmin.vue';
 const app = createApp({});
 
+app.component('LoginAdmin', LoginAdmin);
 
 // import ExampleComponent from './components/ExampleComponent.vue';
 // app.component('example-component', ExampleComponent);
 
+
+
+
 import Login from './components/Login.vue';
 app.component('login', Login);
 
-import Register from './components/Register.vue';
-app.component('register', Register);
+// import Register from './components/Register.vue';
+// app.component('register', Register);
 
 import ClientApp from './components/ClientApp.vue';
 app.component('client', ClientApp);
+
+import Racine from './components/Racine.vue';
+app.component('racine', Racine);
 
 import Dashboard from './views/Dashboard.vue';
 // app.component('dashboard', Dashboard);
@@ -78,12 +86,18 @@ import Team from './views/Team.vue';
 // app.component('ream', Team);
 
 import DoctorDashboard from './views/DoctorDashboard.vue';
+import AdminDashboard from './views/AdminDashboard.vue';
 // app.component('navbar', Navbar);
 
 import Clients from './views/Clients.vue';
-import Doctor from './components/LoginDocteur.vue';
 import First from './components/First.vue';
+app.component('first', First);
+
 import DoctorApointment from './views/DoctorApointment.vue';
+
+//admin
+import AdminClients from './views/AdminClients.vue';
+import AdminDoctors from './views/AdminDoctors.vue';
 // app.component('footer', Footer);
 
 // import Popup from './components/Popup.vue';
@@ -100,6 +114,7 @@ const routes = [
       components: {
         default: Dashboard,
         client: Dashboard, 
+        admin: AdminDashboard,
         doctor: DoctorDashboard, // Named view for the doctor dashboard
         first: First, // Named view for the doctor dashboard
       },
@@ -112,6 +127,7 @@ const routes = [
         default: Projects,
         client: Projects,// Default view
         doctor: DoctorApointment , // Named view for the doctor dashboard
+  
       },
     },
     {
@@ -121,24 +137,37 @@ const routes = [
         default: Team, // Default view
         client: Team, // Default view
         doctor: Clients, // Named view for the doctor dashboard
+        admin: AdminDoctors,
+      },
+    },
+    {
+      path: '/clients',
+      name: 'clients',
+      components: {
+        default: Team, // Default view
+        client: Team, // Default view
+        doctor: Clients, // Named view for the doctor dashboard
+        admin: AdminClients,
       },
     },
    
-    {
-      path: '/doctor',
-      name: 'doctor',
-      components: {
-        default: Doctor,
-        first: Doctor, // Default view
-         // Named view for the doctor dashboard
-      },
-    },
     {
       path: '/client',
       name: 'client',
       components: {
         default: Dashboard,
         first: Login, // Default view
+        // Named view for the doctor dashboard
+      },
+    },
+   
+    {
+      path: '/admin',
+      name: 'admin',
+      components: {
+        default: Racine,
+        admin:AdminDashboard,
+         // Default view
         // Named view for the doctor dashboard
       },
     },

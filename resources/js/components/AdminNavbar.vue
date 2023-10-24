@@ -88,8 +88,8 @@
 
 <script>
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import Popup from './Popup.vue'
-import { computed, mergeProps } from 'vue'
+import Popup from './AddDoctor.vue'
+import {  mergeProps } from 'vue'
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 export default {
@@ -100,9 +100,10 @@ export default {
       missedAppointments: [],
       drawer: false,
       links :[
-          {icon: 'dashboard', text:'Accueil', route: '/'},
+          {icon: 'dashboard', text:'Dashboard', route: '/'},
           {icon: 'folder', text:'Rendez-vous', route: '/projects'},
-          {icon: 'person', text:'Nos Docteurs', route: '/team'}
+          {icon: 'person', text:'Nos Docteurs', route: '/team'},
+          {icon: 'person', text:'Nos Clients', route: '/clients'}
       ]
      
     }),
@@ -162,7 +163,6 @@ export default {
         return appointmentDate.getTime() < today.getTime() ; 
       });
     },
-   
     },
     setup() {
     const router = useRouter();
@@ -184,21 +184,21 @@ export default {
   async mounted() {
   try {
     // Fetch appointments from the server using Axios
-    axios
-      .get('api/appointments')
-      .then(response => {
-        this.appointments = response.data;
+    // axios
+    //   .get('api/doctorAppointments')
+    //   .then(response => {
+    //     this.appointments = response.data;
 
-        // Call the method to filter tomorrow's appointments
-        this.getTomorrowAppointments();
-        this.getMessedAppointments();
-        console.log(this.tomorrowAppointments);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    // Simulate an asynchronous operation to fetch the user data
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    //     // Call the method to filter tomorrow's appointments
+    //     this.getTomorrowAppointments();
+    //     this.getMessedAppointments();
+    //     console.log(this.tomorrowAppointments);
+    //   })
+    //   .catch(error => {
+    //     console.error(error);
+    //   });
+    // // Simulate an asynchronous operation to fetch the user data
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
 
     console.log(this.user.profile_picture);
     if (this.user.profile_picture) {

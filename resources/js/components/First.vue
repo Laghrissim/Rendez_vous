@@ -1,6 +1,16 @@
 <template >
     <div v-if="show">
+        <nav class="tw-sticky tw-top-0 tw-z-50">
+  <div  class="tw-bg-blue-500 tw-p-4 tw-float hover-effect"  @click="reloadPage">
+      <v-toolbar-title class="text-uppercase tw-text-black" >
+        <span class="font-weight-light ">Dentaire</span>
+        <span>Express</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer> 
+    </div>
+  </nav>
   <header id="header" class="header tw-pt-20">
+   
     <div class="container ">
         <div class="row tw-mt-0 tw-text-center">
             <div class="col-lg-6 col-xl-5 tw-ml-20 tw-mt-20">
@@ -8,8 +18,8 @@
                     <h1 class="h1-large">Cabinet dentaire DentaireExpress</h1>
                     <p class="p-large">Soins Dentaires Exceptionnels pour Votre Santé Bucco-Dentaire</p>
                     
-                    <router-link to="/client" class="btn-solid-lg" @click="show = false; client = true; doctor = false" dark>For Client</router-link>
-                    <router-link to="/doctor" class="btn-solid-lg" @click="show = false; client = false; doctor = true"  dark>For Doctor</router-link>
+                    <router-link to="/" class="btn-solid-lg" @click="show = false; client = true; doctor = false" dark>Pour Client</router-link>
+                    <router-link to="/" class="btn-solid-lg" @click="show = false; client = false; doctor = true"  dark>Pour Docteur</router-link>
                    
                     
                 </div>
@@ -350,13 +360,14 @@
   <script>
   import Popup from './Popup.vue'
   import Login from './Login.vue';
-  import Doctor from './LoginDocteur.vue';
+  import Doctor from './LoginDoc.vue';
   import axios from 'axios';
 
 
   export default {
       data() {
       return {
+        user: {},
         show: true,
         client: false,
         doctor: false,
@@ -462,9 +473,14 @@
     created() {
       this.formatDescription();
       this.show=true
+      
    
 
     },
+    mounted(){
+        this.checkAuthentication();
+    },
+
     methods: {
       formatDescription() {
         this.formattedDescription = this.welcomeDescription.replace(
@@ -472,6 +488,31 @@
           "<strong><span style='font-weight: bold;'>$1</span></strong>"
         );
       },
+      checkAuthentication() {
+      axios.get('/sanctum/csrf-cookie').then(response => {
+        axios.get('api/check-authentication').then((response) => {
+          if (response.data.authenticated) {
+           
+            axios.get('/api/user').then((response) => {
+              console.log(response);
+              this.user = response.data;
+              if(this.user.type =='client')
+              { this.show = false,
+                this.client=true
+              }
+              else if(this.user.type =='doctor')
+              { this.show = false,
+                this.doctor=true
+              }
+            });
+          }
+        });
+      });
+    },
+    reloadPage() {
+      // Reload the page
+      window.location.reload();
+    }
      
   
     },
@@ -541,6 +582,10 @@ h6 {
 	font-weight: 700;
 	font-size: 1rem;
 	line-height: 1.375rem;
+}
+.hover-effect:hover {
+  background-color: #007acc; /* Change the background color when hovered */
+  cursor: pointer; /* Change the cursor to a pointer on hover */
 }
   </style>
   

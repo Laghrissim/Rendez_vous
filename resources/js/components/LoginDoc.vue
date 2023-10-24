@@ -1,7 +1,7 @@
 <template dark>
 <nav class="tw-sticky tw-top-0 tw-z-50" v-if="!connected">
-  <div  class="tw-bg-blue-500 tw-p-4 tw-float">
-      <v-toolbar-title class="text-uppercase tw-text-black">
+  <div  class="tw-bg-blue-500 tw-p-4 tw-float hover-effect"  @click="reloadPage">
+      <v-toolbar-title class="text-uppercase tw-text-black" >
         <span class="font-weight-light ">Dentaire</span>
         <span>Express</span>
       </v-toolbar-title>
@@ -19,7 +19,7 @@
                 <v-divider class="border-opacity-100" :thickness="2"></v-divider>
           <v-card-text>
             <p>Sign in with your email and password: </p><br>
-            <v-form @submit.prevent="handleDoctorLogin">
+            <v-form @submit.prevent="handleLogin">
               <v-text-field v-model="formData.email" outline label="Email Address" clearable prepend-icon="account_circle"></v-text-field>
               <v-text-field v-model="formData.password" outline label="Password" type="password" prepend-icon="key"></v-text-field>
               <v-alert v-if="LoginMessage" type="error" class="mt-4 mb-4">{{ LoginMessage }}</v-alert>
@@ -30,7 +30,6 @@
                 Login
               </v-btn>
                 
-                <v-btn @click="showRegisterForm">Register</v-btn>
               </v-row>
             </v-form>
           </v-card-text>
@@ -43,16 +42,14 @@
 </div>
 
         
-  <register v-if="showRegister" @show-login="showLoginForm" @registration-success="handleRegistrationSuccess"></register>
 
-  <Doctor v-if="!showRegister && connected " :user="user" />
+  <Doctor v-if="!showRegister && connected && user.type=='doctor'" :user="user" />
 
 </template>
 
 <script>
 import Client from './ClientApp.vue'
 import Doctor from './DoctorApp.vue'
-import Register from './RegisterDoctor.vue';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
@@ -74,38 +71,53 @@ export default {
     };
   },
   methods: {
-    handleDoctorLogin() {
-  axios.get('/sanctum/csrf-cookie').then(response => {
-    axios.post('/docteur', this.formData).then((response) => {
-      this.connected = true;
-      axios.get('/api/doctor').then((response) => {
-        console.log(response);
-        this.user = response.data;
-        this.LoginMessage = 'Login successful!';
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-      this.LoginMessage = 'Login failed. Please check your credentials.'
-    });
-  });
-},
+    handleLogin() {
+      axios.get('/sanctum/csrf-cookie').then(response => {
+        axios.post('/login', this.formData).then((response) => {
+          
+          axios.get('/api/user').then((response) => {
+            console.log(response);
+            this.user = response.data;
+            if (this.user.type === 'client') {
+                // Perform a logout
+                axios.post('/logout').then(() => {
+                  setTimeout(() => {
+                    
+                  }, 50);
+                }).catch((logoutError) => {
+                  console.error(logoutError);
+                  this.LoginMessage = 'Logout failed. Please try again.';
+                });
 
-checkDoctorAuthentication() {
-  axios.get('/sanctum/csrf-cookie').then(response => {
-    axios.get('api/docteur/check-authentication').then((response) => {
-      if (response.data.authenticated) {
-        this.connected = true;
-
-        axios.get('/doctor').then((response) => {
-          console.log(response);
-          this.user = response.data;
+                // Throw an error
+                this.LoginMessage =  'Login failed. Please check your credentials.'
+              }
+            else {
+            this.connected=true
+            this.LoginMessage = 'Login successful!';
+          }
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+          this.LoginMessage =  'Login failed. Please check your credentials.'
         });
-      }
-    });
-  });
-},
-
+      });
+    },
+    checkAuthentication() {
+      axios.get('/sanctum/csrf-cookie').then(response => {
+        axios.get('api/check-authentication').then((response) => {
+          if (response.data.authenticated) {
+            this.connected=true
+           
+            axios.get('/api/user').then((response) => {
+              console.log(response);
+              this.user = response.data;
+            });
+          }
+        });
+      });
+    },
     
     showRegisterForm() {
       this.showRegister = true;
@@ -119,14 +131,17 @@ checkDoctorAuthentication() {
      
       
     },
+    reloadPage() {
+      // Reload the page
+      window.location.reload();
+    }
   },
   components: {
-    register: Register,
-    client: Client,
+    Client,
     Doctor,
   },
   created() {
-    this.checkDoctorAuthentication();
+    this.checkAuthentication();
     const storedRegistrationMessage = localStorage.getItem('registrationSuccessMessage');
     setTimeout(() => {
       if (storedRegistrationMessage) {
@@ -136,11 +151,16 @@ checkDoctorAuthentication() {
     }, 2000);
    
   },
+
 };
 </script>
 
 <style>
 .form-row {
   margin-bottom: 8px;
+}
+.hover-effect:hover {
+  background-color: #007acc; /* Change the background color when hovered */
+  cursor: pointer; /* Change the cursor to a pointer on hover */
 }
 </style>

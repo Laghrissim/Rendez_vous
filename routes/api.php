@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClientController;
@@ -39,14 +40,20 @@ Route::middleware('auth:sanctum')->get('/check-authentication', function (Reques
 Route::middleware('auth:sanctum')->group(function () {
     // Retrieve authenticated doctor's data
 // Route for fetching authenticated doctor's data using Sanctum Middleware
-Route::middleware('auth:sanctum')->get('/doctor', function (Request $request) {
-    return $request->user('docteur')->only(['id', 'name', 'email', 'profile_picture', 'type']);
+Route::middleware('auth:sanctum')->get('/admin', function (Request $request) {
+    return $request->user('admin')->only(['id', 'name', 'email', 'profile_picture']);
 });
     
     // Check if a doctor is authenticated
-    Route::middleware('auth:sanctum')->get('/docteur/check-authentication', function (Request $request) {
-        return response()->json(['authenticated' => $request->user('docteur') !== null]);
+    Route::middleware('auth:sanctum')->get('/admin/check-authentication', function (Request $request) {
+        return response()->json(['authenticated' => $request->user('admin') !== null]);
     });
+    Route::get('/admin/counts', [AdminController::class, 'getCounts']);
+    Route::get('/getClients', [AdminController::class, 'getClients']);
+    Route::post('/createDoctor', [AdminController::class, 'createDoctor']);
+    Route::put('/updateDoctor/{id}', [AdminController::class, 'updateDoctor']);
+    Route::delete('/deleteDoctor/{id}', [AdminController::class, 'deleteDoctor']);
+
     
 });
 
@@ -58,8 +65,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
     Route::put('/appointments/edit/{id}', [AppointmentController::class, 'edit']);
     Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
+    Route::post('/appointments/{id}/confirm', [AppointmentController::class,'confirm']);
+    Route::post('/appointments/{id}/unconfirm', [AppointmentController::class,'unconfirm']);
 });
     
+Route::post('/appointments/{id}/unconfirm', [AppointmentController::class,'unconfirm']);
 
 
 Route::get('/getDates', [AppointmentController::class, 'getDates']);
@@ -70,6 +80,8 @@ Route::post('/comments', [CommentController::class, 'store']);
 Route::get('/comments', [CommentController::class, 'index']);
 Route::put('/comments/{id}', [CommentController::class, 'update']);
 Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
+Route::get('/comments/{commentId}/profile-picture', [CommentController::class, 'getProfilePictureByCommentId']);
+
 
 
 // Route to send a message

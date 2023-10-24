@@ -16,7 +16,7 @@
               <v-icon color="white">arrow_back</v-icon>    
               </v-app-bar-nav-icon>
               <v-toolbar-title class="white--text"
-                >DR.{{ doctor.name }} </v-toolbar-title>
+                >Mr.{{ doctor.name }} </v-toolbar-title>
             </v-app-bar>
             <v-container class="fill-height">
               <v-row class="fill-height pb-14" align="end">

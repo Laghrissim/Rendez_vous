@@ -19,7 +19,7 @@
         </template>
         <v-list flat>
           <v-list-item v-for="link in links" :key="link.text" router :to="link.route" active-class="border">
-            <v-list-item-title>{{ link.text }}</v-list-item-title>
+            <v-list-item-title style="font-size: 14px;">{{ link.text }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -68,14 +68,15 @@
       </v-row>
       <v-row class="mt-4 mb-4">
         <v-col>
-          <Popup />
+          <router-link to="/projects" class="btn-solid-lg"  dark>Voir votre rendez-vous</router-link>
+
         </v-col>
       </v-row>
       <v-list flat>
         <v-list-item v-for="link in links" :key="link.text" router :to="link.route" active-class="border">
           <v-list-item-action>
             <v-icon size="16">{{link.icon}}</v-icon>
-            <v-list-item-title class="tw-ml-5" >{{ link.text }}</v-list-item-title>
+            <v-list-item-title class="tw-ml-1" style="font-size: 14px;" >{{ link.text }}</v-list-item-title>
 
           </v-list-item-action>
           
@@ -167,7 +168,7 @@ export default {
     const router = useRouter();
 
     const logout = () => {
-      axios.post('/docteur/logout').then(() => {
+      axios.post('/logout').then(() => {
         router.push('/');
         setTimeout(() => {
         location.reload();
